@@ -1,0 +1,36 @@
+*,html,body{
+margin: 0;
+padding: 0;
+box-sizing: 0;
+}
+:root {
+  --headerBg: #3674B5;
+  --footerBg: #3674B5;
+}
+/* --------------- Global Styling ------------------- */
+.completed {
+  color: green;
+  text-decoration: line-through;
+}
+
+.in-progress {
+  color: orange;
+  font-style: italic;
+}
+
+.pending {
+  color: gray;
+}
+/* -------X------- Global Styling --------X---------- */
+
+/* --------------- Header ------------------- */
+#header {
+  background-color: var(--headerBg);
+}
+/* -------X------- Header --------X---------- */
+
+/* --------------- Footer ------------------- */
+#footer {
+  background-color: var(--footerBg);
+}
+/* -------X------- Footer --------X---------- */

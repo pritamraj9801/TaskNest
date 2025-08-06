@@ -1,0 +1,8 @@
+# dependencies
+/backend/node_modules
+/UI/node_modules
+
+
+# production
+/backend/build
+/UI/build
