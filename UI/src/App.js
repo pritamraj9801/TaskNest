@@ -2,11 +2,11 @@ import  { useState } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 
 // requiring Components
-import Login from "./Login";
-import Register from "./Register";
+import Login from "./Page/Login";
+import Register from "./Page/Register";
 import DashBoard from "./DashBoard";
-import Header from "./Header";
-import Footer from "./Footer";
+import Header from "./Component/Header";
+import Footer from "./Component/Footer";
 
 // Separate LoginWrapper to use navigate inside
 function LoginWrapper({ onLogin, onShowRegister }) {
