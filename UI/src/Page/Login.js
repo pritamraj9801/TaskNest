@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
 
-export default function Login({ onLogin,onShowRegister}) {
+export default function Login({ onLogin, onShowRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const getMasterSecretKeyFromServer = async () => {
@@ -14,7 +14,10 @@ export default function Login({ onLogin,onShowRegister}) {
     );
     const data = await response.json();
     const secretKeyWithoutDecr = data.encryptedSecretKey;
-    const descSecretKey = CryptoJS.AES.decrypt(secretKeyWithoutDecr,password).toString(CryptoJS.enc.Utf8)
+    const descSecretKey = CryptoJS.AES.decrypt(
+      secretKeyWithoutDecr,
+      password
+    ).toString(CryptoJS.enc.Utf8);
     // we will store this in local storage
     localStorage.setItem("SecretKey", descSecretKey);
   };
@@ -36,24 +39,37 @@ export default function Login({ onLogin,onShowRegister}) {
       alert(data.message);
     }
   };
-
   return (
-    <div>
-      <h2>Login</h2>
-      <input
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        placeholder="Password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Sign In</button>
-      <br />
-      <button onClick={onShowRegister}>Don't have an account? Register</button>
+    <div id="loginContainer">
+      <div id="loginBox"  className="p-1">
+        <h2 className="textCenter">Login</h2>
+        <div className="mtb-1">
+          <label>Email</label>
+          <br />
+          <input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="mtb-1">
+          <label>Password</label>
+          <br />
+          <input
+            placeholder="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <button onClick={handleLogin}>Sign In</button>
+          <br />
+          <button onClick={onShowRegister}>
+            Don't have an account? Register
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

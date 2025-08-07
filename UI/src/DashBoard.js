@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import CryptoJS from "crypto-js";
 
 export default function DashBoard() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
-  const navigate = useNavigate();
   // the secret key is static, for all user but we will have to create it user specific...
   // But how 🤔
 
@@ -50,56 +48,49 @@ export default function DashBoard() {
     });
     fetchTasks();
   };
-const startTask = async (id) => {
-  await fetch(`http://localhost:3001/api/tasks/${id}/start`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
-  fetchTasks();
-};
-
-const completeTask = async (id) => {
-  await fetch(`http://localhost:3001/api/tasks/${id}/complete`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
-  fetchTasks();
-};
-
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/"); // Navigate back to login
+  const startTask = async (id) => {
+    await fetch(`http://localhost:3001/api/tasks/${id}/start`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    fetchTasks();
   };
 
+  const completeTask = async (id) => {
+    await fetch(`http://localhost:3001/api/tasks/${id}/complete`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    fetchTasks();
+  };
   useEffect(() => {
     fetchTasks();
   }, []);
 
   return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h2>Task Manager</h2>
-        <button onClick={handleLogout}>Logout</button>
-      </div>
+    <div id="dashboardContainer">
+      <div style={{ display: "flex", justifyContent: "space-between" }}></div>
       <input
         value={newTask}
         onChange={(e) => setNewTask(e.target.value)}
         placeholder="Enter task"
+        id="taskInput"
       />
-      <button onClick={addTask}>Add</button>
-      <ul>
+      <button onClick={addTask} id="addTaskBtn">
+        Add
+      </button>
+      <ul id="taskList">
         {tasks.map((t) => {
           const secretKey = localStorage.getItem("SecretKey");
           const decryptedName = CryptoJS.AES.decrypt(
             t.taskName,
             secretKey
           ).toString(CryptoJS.enc.Utf8);
-
+          const taskCreatedDate = new Date(t.createdDate);
           // Set class based on taskStatus
           let spanClass = "";
           if (t.taskStatus.name === "Completed") {
@@ -111,11 +102,40 @@ const completeTask = async (id) => {
           }
 
           return (
-            <li key={t._id}>
-              <span className={spanClass}>{decryptedName}</span>
-              <button onClick={() => startTask(t._id)}>In Progress</button>
-              <button onClick={() => completeTask(t._id)}>Completed</button>
-              <button onClick={() => deleteTask(t._id)}>Delete</button>
+            <li key={t._id} id="taskItemContainer">
+              <div id="taskItemBox">
+                <span>
+                  <span className="taskDate">
+                    {taskCreatedDate.toLocaleDateString()}{" "}
+                    {taskCreatedDate.toLocaleTimeString()}
+                    &nbsp;&gt;
+                  </span>
+                  <br/>
+                  <span className={spanClass}>
+                    &nbsp;<span className="greenDot"></span>&nbsp;
+                    {decryptedName}</span>
+                </span>
+              </div>
+              <div style={{ marginTop: "10px" }}>
+                <button
+                  onClick={() => startTask(t._id)}
+                  className="inProgressBtn actionBtn"
+                >
+                  In Progress
+                </button>
+                <button
+                  onClick={() => completeTask(t._id)}
+                  className="completeBtn actionBtn"
+                >
+                  Completed
+                </button>
+                <button
+                  onClick={() => deleteTask(t._id)}
+                  className="deleteBtn actionBtn"
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           );
         })}
