@@ -5,6 +5,7 @@ export default function DashBoard() {
   const [pendingTasks, setPendingTasks] = useState([]);
   const [overdueTasks, setOverdueTasks] = useState([]);
   const [completedTasks, setCompletedTasks] = useState([]);
+  const [isReOccurring, setIsReOccurring] = useState(false);
   const [newTask, setNewTask] = useState("");
   // the secret key is static, for all user but we will have to create it user specific...
   // But how 🤔
@@ -55,16 +56,21 @@ export default function DashBoard() {
       localStorage.getItem("SecretKey")
     ).toString();
 
+    let fromDate = document.getElementById("fromDateInput").value;
+    let toDate = document.getElementById("toDateInput").value;
     await fetch("http://localhost:3001/api/addTask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({ text: encryptedTask }),
+      body: JSON.stringify({ taskName: encryptedTask, fromDate, toDate, isReOccurring }),
     });
     setNewTask("");
+    setIsReOccurring(false);
     fetchTasks();
+        document.getElementById("fromDateInput").value = "";
+    document.getElementById("toDateInput").value = "";
   };
 
   const deleteTask = async (id) => {
@@ -76,19 +82,15 @@ export default function DashBoard() {
     });
     fetchTasks();
   };
-  // const startTask = async (id) => {
-  //   await fetch(`http://localhost:3001/api/tasks/${id}/start`, {
-  //     method: "POST",
-  //     headers: {
-  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //     },
-  //   });
-  //   fetchTasks();
-  // };
   // mark reoccuring task
   const MarkReOccuringTask = async () => {
     let elem = document.querySelector("#reoccuringBtn i");
     elem.classList.toggle("fa-repeat-active");
+    if(isReOccurring){
+      setIsReOccurring(false);
+    }else{
+      setIsReOccurring(true);
+    }
   };
 
   const completeTask = async (id) => {
@@ -164,8 +166,8 @@ export default function DashBoard() {
       />
       <div id="taskDetailBox">
         <div id="reOccuringDiv">
-          <input type="datetime-local" className="datetime-primary" />
-          <input type="datetime-local"  className="datetime-primary" />
+          <input id="fromDateInput" type="datetime-local" className="datetime-primary" />
+          <input id="toDateInput" type="datetime-local"  className="datetime-primary" />
            <span id="reoccuringBtn" onClick={MarkReOccuringTask}>
             <i class="fa-solid fa-repeat"></i>
           </span>

@@ -153,10 +153,13 @@ app.post("/api/addTask", authMiddleware, async (req, res) => {
   const userId = req.user.userId;
   const createdStatus = await TaskStatus.findOne({ name: "Created" });
   const task = new Task({
-    taskName: req.body.text,
+    taskName: req.body.taskName,
     createdDate: Date.now(),
     createdBy: userId,
     taskStatus: createdStatus,
+    fromDate: req.body.fromDate ? new Date(req.body.fromDate) : null,
+    toDate: req.body.toDate ? new Date(req.body.toDate) : null,
+    isReOccurring: req.body.isReOccurring || false,
   });
   await task.save();
   res.json(task);
