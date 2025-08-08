@@ -76,15 +76,15 @@ export default function DashBoard() {
     });
     fetchTasks();
   };
-  const startTask = async (id) => {
-    await fetch(`http://localhost:3001/api/tasks/${id}/start`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    fetchTasks();
-  };
+  // const startTask = async (id) => {
+  //   await fetch(`http://localhost:3001/api/tasks/${id}/start`, {
+  //     method: "POST",
+  //     headers: {
+  //       Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //     },
+  //   });
+  //   fetchTasks();
+  // };
 
   const completeTask = async (id) => {
     await fetch(`http://localhost:3001/api/tasks/${id}/complete`, {
@@ -104,16 +104,25 @@ const ShowPendingTasks= async()=>{
   document.getElementById("pendingTasksList").classList.remove("display-none");
   document.getElementById("completedTasksList").classList.add("display-none");
   document.getElementById("overdueTasksList").classList.add("display-none");
+  document.getElementById("showPendingBtn").classList.add("btnCategoryActive");
+  document.getElementById("showCompletedBtn").classList.remove("btnCategoryActive");
+  document.getElementById("showOverDueBtn").classList.remove("btnCategoryActive");
 }
 const ShowCompletedTasks = async()=>{
   document.getElementById("completedTasksList").classList.remove("display-none");
   document.getElementById("pendingTasksList").classList.add("display-none");
   document.getElementById("overdueTasksList").classList.add("display-none");
+  document.getElementById("showCompletedBtn").classList.add("btnCategoryActive");
+  document.getElementById("showPendingBtn").classList.remove("btnCategoryActive");
+  document.getElementById("showOverDueBtn").classList.remove("btnCategoryActive");
 }
 const ShowOverdueTasks = async () =>{
   document.getElementById("overdueTasksList").classList.remove("display-none");
   document.getElementById("pendingTasksList").classList.add("display-none");
   document.getElementById("completedTasksList").classList.add("display-none");
+  document.getElementById("showOverDueBtn").classList.add("btnCategoryActive");
+  document.getElementById("showPendingBtn").classList.remove("btnCategoryActive");
+  document.getElementById("showCompletedBtn").classList.remove("btnCategoryActive");
 }
   return (
     <div id="dashboardContainer">
@@ -128,9 +137,9 @@ const ShowOverdueTasks = async () =>{
         Add
       </button>
       <div id="tasksCategory">
-        <button onClick={ShowPendingTasks}>Pending</button>
-        <button onClick={ShowCompletedTasks}>Completed</button>
-        <button onClick={ShowOverdueTasks}>Overdue</button>
+        <button id="showPendingBtn" onClick={ShowPendingTasks} className="btnCategoryPrimary btnCategoryActive">Pending</button>
+        <button id="showCompletedBtn" onClick={ShowCompletedTasks} className="btnCategoryPrimary">Completed</button>
+        <button id="showOverDueBtn" onClick={ShowOverdueTasks} className="btnCategoryPrimary">Overdue</button>
       </div>
       <ul id="completedTasksList" className="display-none taskList">
         {completedTasks.map((t) => {
@@ -160,12 +169,12 @@ const ShowOverdueTasks = async () =>{
                 </span>
               </div>
               <div style={{ marginTop: "10px" }}>
-                <button
+                {/* <button
                   onClick={() => startTask(t._id)}
                   className="inProgressBtn actionBtn"
                 >
                   In Progress
-                </button>
+                </button> */}
                 <button
                   onClick={() => completeTask(t._id)}
                   className="completeBtn actionBtn"
@@ -211,12 +220,12 @@ const ShowOverdueTasks = async () =>{
                 </span>
               </div>
               <div style={{ marginTop: "10px" }}>
-                <button
+                {/* <button
                   onClick={() => startTask(t._id)}
                   className="inProgressBtn actionBtn"
                 >
                   In Progress
-                </button>
+                </button> */}
                 <button
                   onClick={() => completeTask(t._id)}
                   className="completeBtn actionBtn"
@@ -262,12 +271,12 @@ const ShowOverdueTasks = async () =>{
                 </span>
               </div>
               <div style={{ marginTop: "10px" }}>
-                <button
+                {/* <button
                   onClick={() => startTask(t._id)}
                   className="inProgressBtn actionBtn"
                 >
                   In Progress
-                </button>
+                </button> */}
                 <button
                   onClick={() => completeTask(t._id)}
                   className="completeBtn actionBtn"

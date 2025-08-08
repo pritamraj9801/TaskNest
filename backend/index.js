@@ -168,14 +168,14 @@ app.delete("/api/tasks/:id", authMiddleware, async (req, res) => {
   res.json({ success: true });
 });
 // API -> Mark Task as Started
-app.post("/api/tasks/:id/start", authMiddleware, async (req, res) => {
-  const inProgressStatus = await TaskStatus.findOne({ name: "In Progress" });
-  await Task.updateOne(
-    { _id: req.params.id },
-    { $set: { taskStatus: inProgressStatus._id } }
-  );
-  res.json({ success: true });
-});
+// app.post("/api/tasks/:id/start", authMiddleware, async (req, res) => {
+//   const inProgressStatus = await TaskStatus.findOne({ name: "In Progress" });
+//   await Task.updateOne(
+//     { _id: req.params.id },
+//     { $set: { taskStatus: inProgressStatus._id } }
+//   );
+//   res.json({ success: true });
+// });
 
 // API -> Mark Task as Completed
 app.post("/api/tasks/:id/complete", authMiddleware, async (req, res) => {

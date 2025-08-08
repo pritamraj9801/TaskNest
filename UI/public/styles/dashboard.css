@@ -67,3 +67,20 @@
   margin-right: 8px;
   vertical-align: middle;
 }
+.btnCategoryPrimary{
+  color: black;
+  border: none;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 5px;
+  border-bottom: 1px solid black;
+  margin: 0.5rem;
+}
+.btnCategoryActive{
+  color: green;
+  border-bottom-color: green;
+}
+#tasksCategory{
+  margin-top: 1rem;
+}
