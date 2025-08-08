@@ -13,6 +13,7 @@ const Task = require("./database/task");
 const TaskStatus = require("./database/taskStatus");
 // imports your JWT authentication middleware
 const authMiddleware = require("./middleware/auth");
+const taskStatus = require("./database/taskStatus");
 
 // Initializes the Express app instance.
 const app = express();
@@ -100,9 +101,53 @@ app.get("/api/MasterSecretKey", async (req, res) => {
 app.get("/api/tasks", authMiddleware, async (req, res) => {
   const userId = req.user.userId;
   const tasks = await Task.find({ createdBy: userId }).populate("taskStatus");
-  console.log(tasks);
   res.json(tasks);
 });
+
+// API -> Get Overdue Tasks
+app.get("/api/overdueTasks", authMiddleware, async (req, res) => {
+  const userId = req.user.userId;
+  const pendingStatus = await TaskStatus.findOne({ name: "Created" });
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const tasks = await Task.find({
+    createdBy: userId,
+    taskStatus: pendingStatus._id,
+     createdDate: { $lte: startOfDay },
+  }).populate("taskStatus");
+  res.json(tasks);
+});
+// API -> Get Pending Tasks
+app.get("/api/pendingTasks", authMiddleware, async (req, res) => {
+  const userId = req.user.userId;
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+  const pendingStatus = await TaskStatus.findOne({ name: "Created" });
+  const tasks = await Task.find({
+    createdBy: userId,
+    taskStatus: pendingStatus._id,
+    createdDate: { $gte: startOfDay, $lte: endOfDay },
+  }).populate("taskStatus");;
+  res.json(tasks);
+});
+// API -> Get Completed Tasks
+app.get("/api/completedTasks", authMiddleware, async (req, res) => {
+  const userId = req.user.userId;
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+  const completedStatus = await TaskStatus.findOne({ name: "Completed" });
+  const tasks = await Task.find({
+    createdBy: userId,
+    taskStatus: completedStatus._id,
+    createdDate: { $gte: startOfDay, $lte: endOfDay },
+  }).populate("taskStatus");
+  res.json(tasks);
+});
+
 // API -> Add new Task
 app.post("/api/addTask", authMiddleware, async (req, res) => {
   const userId = req.user.userId;

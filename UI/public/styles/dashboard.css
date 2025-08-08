@@ -21,7 +21,7 @@
   border-radius: 4px;
   margin-bottom: 1rem;
 }
-#taskList {
+.taskList {
   border: 1px solid #ccc;
   padding: 1rem;
   margin-top: 1rem;
@@ -40,11 +40,29 @@
     margin-right: 0.5rem;
     padding-bottom: 0.2rem;
 }
-.greenDot {
+.completed{
   display: inline-block;
   width: 12px;
   height: 12px;
   background-color: #27ae60;
+  border-radius: 3px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.pending{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #b8bd32;
+  border-radius: 3px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.overdue{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #b54c1c;
   border-radius: 3px;
   margin-right: 8px;
   vertical-align: middle;

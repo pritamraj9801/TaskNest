@@ -2,19 +2,47 @@ import React, { useEffect, useState } from "react";
 import CryptoJS from "crypto-js";
 
 export default function DashBoard() {
-  const [tasks, setTasks] = useState([]);
+  const [pendingTasks, setPendingTasks] = useState([]);
+  const [overdueTasks, setOverdueTasks] = useState([]);
+  const [completedTasks, setCompletedTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   // the secret key is static, for all user but we will have to create it user specific...
   // But how 🤔
 
   const fetchTasks = async () => {
-    const res = await fetch("http://localhost:3001/api/tasks", {
+    fetchOverdueTasks();
+    fetchPendingTasks();
+    fetchCompletedTasks();
+  }
+  // getting all overdue tasks
+  const fetchOverdueTasks = async () => {
+    const res = await fetch("http://localhost:3001/api/overdueTasks", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     const data = await res.json();
-    setTasks(data);
+    setOverdueTasks(data);
+  };
+  // getting all pending tasks
+  const fetchPendingTasks = async () => {
+    const res = await fetch("http://localhost:3001/api/pendingTasks", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const data = await res.json();
+    setPendingTasks(data);
+  };
+  // getting all completed tasks
+  const fetchCompletedTasks = async () => {
+    const res = await fetch("http://localhost:3001/api/completedTasks", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const data = await res.json();
+    setCompletedTasks(data);
   };
 
   const addTask = async () => {
@@ -71,6 +99,22 @@ export default function DashBoard() {
     fetchTasks();
   }, []);
 
+// display toggle functions
+const ShowPendingTasks= async()=>{
+  document.getElementById("pendingTasksList").classList.remove("display-none");
+  document.getElementById("completedTasksList").classList.add("display-none");
+  document.getElementById("overdueTasksList").classList.add("display-none");
+}
+const ShowCompletedTasks = async()=>{
+  document.getElementById("completedTasksList").classList.remove("display-none");
+  document.getElementById("pendingTasksList").classList.add("display-none");
+  document.getElementById("overdueTasksList").classList.add("display-none");
+}
+const ShowOverdueTasks = async () =>{
+  document.getElementById("overdueTasksList").classList.remove("display-none");
+  document.getElementById("pendingTasksList").classList.add("display-none");
+  document.getElementById("completedTasksList").classList.add("display-none");
+}
   return (
     <div id="dashboardContainer">
       <div style={{ display: "flex", justifyContent: "space-between" }}></div>
@@ -83,8 +127,13 @@ export default function DashBoard() {
       <button onClick={addTask} id="addTaskBtn">
         Add
       </button>
-      <ul id="taskList">
-        {tasks.map((t) => {
+      <div id="tasksCategory">
+        <button onClick={ShowPendingTasks}>Pending</button>
+        <button onClick={ShowCompletedTasks}>Completed</button>
+        <button onClick={ShowOverdueTasks}>Overdue</button>
+      </div>
+      <ul id="completedTasksList" className="display-none taskList">
+        {completedTasks.map((t) => {
           const secretKey = localStorage.getItem("SecretKey");
           const decryptedName = CryptoJS.AES.decrypt(
             t.taskName,
@@ -92,14 +141,7 @@ export default function DashBoard() {
           ).toString(CryptoJS.enc.Utf8);
           const taskCreatedDate = new Date(t.createdDate);
           // Set class based on taskStatus
-          let spanClass = "";
-          if (t.taskStatus.name === "Completed") {
-            spanClass = "completed";
-          } else if (t.taskStatus.name === "In Progress") {
-            spanClass = "in-progress";
-          } else {
-            spanClass = "pending";
-          }
+          let squareMark = "completed";
 
           return (
             <li key={t._id} id="taskItemContainer">
@@ -110,10 +152,113 @@ export default function DashBoard() {
                     {taskCreatedDate.toLocaleTimeString()}
                     &nbsp;&gt;
                   </span>
-                  <br/>
-                  <span className={spanClass}>
-                    &nbsp;<span className="greenDot"></span>&nbsp;
-                    {decryptedName}</span>
+                  <br />
+                  <span>
+                    &nbsp;<span className={squareMark}></span>&nbsp;
+                    {decryptedName}
+                  </span>
+                </span>
+              </div>
+              <div style={{ marginTop: "10px" }}>
+                <button
+                  onClick={() => startTask(t._id)}
+                  className="inProgressBtn actionBtn"
+                >
+                  In Progress
+                </button>
+                <button
+                  onClick={() => completeTask(t._id)}
+                  className="completeBtn actionBtn"
+                >
+                  Completed
+                </button>
+                <button
+                  onClick={() => deleteTask(t._id)}
+                  className="deleteBtn actionBtn"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+     <ul id="overdueTasksList" className="display-none taskList">
+        {overdueTasks.map((t) => {
+          const secretKey = localStorage.getItem("SecretKey");
+          const decryptedName = CryptoJS.AES.decrypt(
+            t.taskName,
+            secretKey
+          ).toString(CryptoJS.enc.Utf8);
+          const taskCreatedDate = new Date(t.createdDate);
+          // Set class based on taskStatus
+         let squareMark = "overdue";
+
+          return (
+            <li key={t._id} id="taskItemContainer">
+              <div id="taskItemBox">
+                <span>
+                  <span className="taskDate">
+                    {taskCreatedDate.toLocaleDateString()}{" "}
+                    {taskCreatedDate.toLocaleTimeString()}
+                    &nbsp;&gt;
+                  </span>
+                  <br />
+                  <span>
+                    &nbsp;<span className={squareMark}></span>&nbsp;
+                    {decryptedName}
+                  </span>
+                </span>
+              </div>
+              <div style={{ marginTop: "10px" }}>
+                <button
+                  onClick={() => startTask(t._id)}
+                  className="inProgressBtn actionBtn"
+                >
+                  In Progress
+                </button>
+                <button
+                  onClick={() => completeTask(t._id)}
+                  className="completeBtn actionBtn"
+                >
+                  Completed
+                </button>
+                <button
+                  onClick={() => deleteTask(t._id)}
+                  className="deleteBtn actionBtn"
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <ul id="pendingTasksList" className="taskList">
+        {pendingTasks.map((t) => {
+          const secretKey = localStorage.getItem("SecretKey");
+          const decryptedName = CryptoJS.AES.decrypt(
+            t.taskName,
+            secretKey
+          ).toString(CryptoJS.enc.Utf8);
+          const taskCreatedDate = new Date(t.createdDate);
+          // Set class based on taskStatus
+           let squareMark = "pending";
+
+          return (
+            <li key={t._id} id="taskItemContainer">
+              <div id="taskItemBox">
+                <span>
+                  <span className="taskDate">
+                    {taskCreatedDate.toLocaleDateString()}{" "}
+                    {taskCreatedDate.toLocaleTimeString()}
+                    &nbsp;&gt;
+                  </span>
+                  <br />
+                  <span>
+                    &nbsp;<span className={squareMark}></span>&nbsp;
+                    {decryptedName}
+                  </span>
                 </span>
               </div>
               <div style={{ marginTop: "10px" }}>

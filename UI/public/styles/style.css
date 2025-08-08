@@ -10,6 +10,9 @@ body {
   --footerBg: #3674b5;
 }
 /* --------------- Global Styling ------------------- */
+.display-none{
+  display: none;
+}
 .p-1 {
   padding: 1rem;
 }
