@@ -23,8 +23,6 @@
 }
 .taskList {
   border: 1px solid #ccc;
-  padding: 1rem;
-  margin-top: 1rem;
   border-radius: 5px;
 }
 #taskItemBox {
@@ -33,14 +31,13 @@
   border-radius: 4px;
   color: #fff;
   font-family: "Candara", sans-serif;
-  
 }
-.taskDate{
-    font-size: 0.8rem;
-    margin-right: 0.5rem;
-    padding-bottom: 0.2rem;
+.taskDate {
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+  padding-bottom: 0.2rem;
 }
-.completed{
+.completed {
   display: inline-block;
   width: 12px;
   height: 12px;
@@ -49,7 +46,7 @@
   margin-right: 8px;
   vertical-align: middle;
 }
-.pending{
+.pending {
   display: inline-block;
   width: 12px;
   height: 12px;
@@ -58,7 +55,7 @@
   margin-right: 8px;
   vertical-align: middle;
 }
-.overdue{
+.overdue {
   display: inline-block;
   width: 12px;
   height: 12px;
@@ -67,7 +64,7 @@
   margin-right: 8px;
   vertical-align: middle;
 }
-.btnCategoryPrimary{
+.btnCategoryPrimary {
   color: black;
   border: none;
   padding: 0.5rem 1rem;
@@ -77,10 +74,33 @@
   border-bottom: 1px solid black;
   margin: 0.5rem;
 }
-.btnCategoryActive{
+.btnCategoryActive {
   color: green;
   border-bottom-color: green;
 }
-#tasksCategory{
-  margin-top: 1rem;
+
+#taskDetailBox {
+  padding: 0.5rem 0;
+}
+.fa-repeat-active {
+  color: green !important;
+}
+#reoccuringBtn i {
+  color: white;
+}
+#reoccuringBtn {
+  cursor: pointer;
+  display: inline-block;
+  background: black;
+  padding: 0.2rem;
+  margin: 0 0.5rem;
+  border-radius: 3px;
+}
+#reoccuringBtn:hover {
+  background: rgba(77, 124, 77, 0.592);
+  transition: all 0.3s ease-in-out;
+}
+.datetime-primary {
+  padding: 0.2rem;
+  margin: 0 0.5rem
 }

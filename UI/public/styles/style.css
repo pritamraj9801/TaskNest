@@ -35,6 +35,10 @@ body {
   padding: 0.5rem;
   margin-left: 0.5rem;
 }
+.flex-row{
+  display: flex;
+  flex-direction: row;
+}
 /* -------X------- Global Styling --------X---------- */
 
 /* --------------- Header ------------------- */

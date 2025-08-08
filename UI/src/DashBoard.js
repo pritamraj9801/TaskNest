@@ -13,7 +13,7 @@ export default function DashBoard() {
     fetchOverdueTasks();
     fetchPendingTasks();
     fetchCompletedTasks();
-  }
+  };
   // getting all overdue tasks
   const fetchOverdueTasks = async () => {
     const res = await fetch("http://localhost:3001/api/overdueTasks", {
@@ -85,6 +85,11 @@ export default function DashBoard() {
   //   });
   //   fetchTasks();
   // };
+  // mark reoccuring task
+  const MarkReOccuringTask = async () => {
+    let elem = document.querySelector("#reoccuringBtn i");
+    elem.classList.toggle("fa-repeat-active");
+  };
 
   const completeTask = async (id) => {
     await fetch(`http://localhost:3001/api/tasks/${id}/complete`, {
@@ -99,31 +104,55 @@ export default function DashBoard() {
     fetchTasks();
   }, []);
 
-// display toggle functions
-const ShowPendingTasks= async()=>{
-  document.getElementById("pendingTasksList").classList.remove("display-none");
-  document.getElementById("completedTasksList").classList.add("display-none");
-  document.getElementById("overdueTasksList").classList.add("display-none");
-  document.getElementById("showPendingBtn").classList.add("btnCategoryActive");
-  document.getElementById("showCompletedBtn").classList.remove("btnCategoryActive");
-  document.getElementById("showOverDueBtn").classList.remove("btnCategoryActive");
-}
-const ShowCompletedTasks = async()=>{
-  document.getElementById("completedTasksList").classList.remove("display-none");
-  document.getElementById("pendingTasksList").classList.add("display-none");
-  document.getElementById("overdueTasksList").classList.add("display-none");
-  document.getElementById("showCompletedBtn").classList.add("btnCategoryActive");
-  document.getElementById("showPendingBtn").classList.remove("btnCategoryActive");
-  document.getElementById("showOverDueBtn").classList.remove("btnCategoryActive");
-}
-const ShowOverdueTasks = async () =>{
-  document.getElementById("overdueTasksList").classList.remove("display-none");
-  document.getElementById("pendingTasksList").classList.add("display-none");
-  document.getElementById("completedTasksList").classList.add("display-none");
-  document.getElementById("showOverDueBtn").classList.add("btnCategoryActive");
-  document.getElementById("showPendingBtn").classList.remove("btnCategoryActive");
-  document.getElementById("showCompletedBtn").classList.remove("btnCategoryActive");
-}
+  // display toggle functions
+  const ShowPendingTasks = async () => {
+    document
+      .getElementById("pendingTasksList")
+      .classList.remove("display-none");
+    document.getElementById("completedTasksList").classList.add("display-none");
+    document.getElementById("overdueTasksList").classList.add("display-none");
+    document
+      .getElementById("showPendingBtn")
+      .classList.add("btnCategoryActive");
+    document
+      .getElementById("showCompletedBtn")
+      .classList.remove("btnCategoryActive");
+    document
+      .getElementById("showOverDueBtn")
+      .classList.remove("btnCategoryActive");
+  };
+  const ShowCompletedTasks = async () => {
+    document
+      .getElementById("completedTasksList")
+      .classList.remove("display-none");
+    document.getElementById("pendingTasksList").classList.add("display-none");
+    document.getElementById("overdueTasksList").classList.add("display-none");
+    document
+      .getElementById("showCompletedBtn")
+      .classList.add("btnCategoryActive");
+    document
+      .getElementById("showPendingBtn")
+      .classList.remove("btnCategoryActive");
+    document
+      .getElementById("showOverDueBtn")
+      .classList.remove("btnCategoryActive");
+  };
+  const ShowOverdueTasks = async () => {
+    document
+      .getElementById("overdueTasksList")
+      .classList.remove("display-none");
+    document.getElementById("pendingTasksList").classList.add("display-none");
+    document.getElementById("completedTasksList").classList.add("display-none");
+    document
+      .getElementById("showOverDueBtn")
+      .classList.add("btnCategoryActive");
+    document
+      .getElementById("showPendingBtn")
+      .classList.remove("btnCategoryActive");
+    document
+      .getElementById("showCompletedBtn")
+      .classList.remove("btnCategoryActive");
+  };
   return (
     <div id="dashboardContainer">
       <div style={{ display: "flex", justifyContent: "space-between" }}></div>
@@ -133,13 +162,40 @@ const ShowOverdueTasks = async () =>{
         placeholder="Enter task"
         id="taskInput"
       />
+      <div id="taskDetailBox">
+        <div id="reOccuringDiv">
+          <input type="datetime-local" className="datetime-primary" />
+          <input type="datetime-local"  className="datetime-primary" />
+           <span id="reoccuringBtn" onClick={MarkReOccuringTask}>
+            <i class="fa-solid fa-repeat"></i>
+          </span>
+        </div>
+      </div>
       <button onClick={addTask} id="addTaskBtn">
         Add
       </button>
       <div id="tasksCategory">
-        <button id="showPendingBtn" onClick={ShowPendingTasks} className="btnCategoryPrimary btnCategoryActive">Pending</button>
-        <button id="showCompletedBtn" onClick={ShowCompletedTasks} className="btnCategoryPrimary">Completed</button>
-        <button id="showOverDueBtn" onClick={ShowOverdueTasks} className="btnCategoryPrimary">Overdue</button>
+        <button
+          id="showPendingBtn"
+          onClick={ShowPendingTasks}
+          className="btnCategoryPrimary btnCategoryActive"
+        >
+          Pending
+        </button>
+        <button
+          id="showCompletedBtn"
+          onClick={ShowCompletedTasks}
+          className="btnCategoryPrimary"
+        >
+          Completed
+        </button>
+        <button
+          id="showOverDueBtn"
+          onClick={ShowOverdueTasks}
+          className="btnCategoryPrimary"
+        >
+          Overdue
+        </button>
       </div>
       <ul id="completedTasksList" className="display-none taskList">
         {completedTasks.map((t) => {
@@ -192,7 +248,7 @@ const ShowOverdueTasks = async () =>{
           );
         })}
       </ul>
-     <ul id="overdueTasksList" className="display-none taskList">
+      <ul id="overdueTasksList" className="display-none taskList">
         {overdueTasks.map((t) => {
           const secretKey = localStorage.getItem("SecretKey");
           const decryptedName = CryptoJS.AES.decrypt(
@@ -201,7 +257,7 @@ const ShowOverdueTasks = async () =>{
           ).toString(CryptoJS.enc.Utf8);
           const taskCreatedDate = new Date(t.createdDate);
           // Set class based on taskStatus
-         let squareMark = "overdue";
+          let squareMark = "overdue";
 
           return (
             <li key={t._id} id="taskItemContainer">
@@ -252,7 +308,7 @@ const ShowOverdueTasks = async () =>{
           ).toString(CryptoJS.enc.Utf8);
           const taskCreatedDate = new Date(t.createdDate);
           // Set class based on taskStatus
-           let squareMark = "pending";
+          let squareMark = "pending";
 
           return (
             <li key={t._id} id="taskItemContainer">
